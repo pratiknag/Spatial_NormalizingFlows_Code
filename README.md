@@ -1,5 +1,5 @@
 # Spatial Normalizing Flows
-This repository contains the code and workflows used in our paper titled "**Normalizing flows for flexible spatial process modeling**", which combines the Normalizing flows with Gaussian processes to model flexible spatial processes.
+This repository contains the code and workflows used in our paper titled "**Modeling nonstationary spatial processes with normalizing flows**", which combines the Normalizing flows with Gaussian processes to model flexible spatial processes.
 
 ---
 
