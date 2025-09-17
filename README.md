@@ -52,7 +52,7 @@ bash run_argo.sh
 ```
 
 ---
-
+<!--
 ## 📫 Contact
 
 For questions, feel free to reach out:
@@ -60,3 +60,4 @@ For questions, feel free to reach out:
 📧 **[pnag@uow.edu.au](mailto:pnag@uow.edu.au)**
 
 ---
+-->
