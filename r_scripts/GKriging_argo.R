@@ -18,8 +18,9 @@ np <- import("numpy")
 source("r_scripts/GKriging_functions.R")
 
 
-file_path = paste0("raw_datasets/argo3D.csv")
+file_path = paste0("raw_datasets/argo3D_resi.csv")
 data = read.csv(file_path, header = T)
+
 train_ind = c(1:round(0.9*dim(data)[1], digits = 0))
 data_train = data[train_ind,]
 data_train = data_train[sample(1:dim(data_train)[1],1000),]
@@ -67,10 +68,10 @@ data = read.csv(file_path, header = T)
 train_ind = c(1:round(0.9*dim(data)[1], digits = 0))
 data_train = data[train_ind,]
 data_test = data[-train_ind,]
-data_train = data_train[sample(1:dim(data_train)[1],3000),]
+data_train = data_train[sample(1:dim(data_train)[1],4000),]
 init.ind = np$load("results_argo3D/param_estimates_python.npy")
 init.ind = log(init.ind)
-init.ind = c(init.ind[2],init.ind[1],0.40,init.ind[3])
+init.ind = c(init.ind[2],init.ind[1],0,init.ind[3])
 cat("===========================================================\n")
 cat("Starting stationary Mat\'ern parameter estimation for estimated warped locations...\n")
 cat("===========================================================\n")

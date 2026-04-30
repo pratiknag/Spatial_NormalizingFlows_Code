@@ -20,7 +20,7 @@ source("r_scripts/GKriging_functions.R")
 if (!dir.exists("results_argo3D/plots")){
   dir.create("results_argo3D/plots")
 }
-denormalize <- function(x, mn = 6.64, var = 4.11){
+denormalize <- function(x, mn = 6.64, var = 5.11){
  return((x*var) + mn)
 }
 
@@ -47,7 +47,13 @@ data_test = read.csv(file_path, header = T)
 indmat.estim = readRDS("results_argo3D/warped_param_estimates.rds")
 pred = readRDS("results_argo3D/prediction_single_coordinate.rds")
 test_obs = read.csv("raw_datasets/test_data_single-coordinate.csv", header = T)
+load("models/model_regression_argo.RData")
+new_data_clean <- test_obs %>%
+  rename(mean_pres = pres) %>%
+  select(lon, lat, mean_pres)
 
+test_obs$pred <- predict(final_model, newdata = new_data_clean)
+test_obs$pred <- denormalize(test_obs$pred + pred$pred) + 3
 data_test$pred = pred$pred
 data_test$pred <- denormalize(data_test$pred)
 data_test$yl = pred$pred - 1.96*sqrt(diag(pred$conditional_var))
@@ -234,10 +240,23 @@ indmat.estim = readRDS("results_argo3D/warped_param_estimates.rds")
 # saveRDS(pred, "results_argo3D/prediction_single_pressure.rds")
 pred = readRDS("results_argo3D/prediction_single_pressure.rds")
 test_obs = read.csv("raw_datasets/test_locs_single-pres.csv", header = T)
-test_obs$pred = pred$pred
+load("models/model_regression_argo.RData")
+new_data_clean <- test_obs %>%
+  rename(
+    lon = lon,
+    lat = lat,
+    mean_pres = pres
+  )
+new_data_clean <- new_data_clean %>%
+  select(lon, lat, mean_pres)
+
+test_obs$pred <- predict(
+  final_model,
+  newdata = new_data_clean
+)
+test_obs$pred = test_obs$pred + pred$pred
 test_obs$pred <- denormalize(test_obs$pred)
 test_obs$std_error = sqrt(diag(pred$conditional_var))*4.11
-
 
 ## Pres level 0.1 0.5 0.9
 

@@ -1,7 +1,7 @@
 ##############################################################################
 ## Title:  Reproducible script for generating the results of the 2D experiment
 ##         in Section 4.2.2
-## Author: Andrew Zammit-Mangion
+## Author: Andrew Zammit-Mangion and Pratik Nag
 ## Date:   15 March 2020
 ##############################################################################
 rm(list = ls())
@@ -34,11 +34,11 @@ set_deepspat_seed(1L)
 r1 <- 50L  # number of basis functions for the AWUs
 r2 <- 400L # number of basis functions in top layer
 
-# simnames <- c("AWU_RBF_LFT_2D.json",
-#               "AWU_RBF_2D.json",
-#               "TWIST_2D.json")
+simnames <- c("AWU_RBF_LFT_2D.json",
+              "AWU_RBF_2D.json",
+              "TWIST_2D.json")
 
-simnames <- c("TWIST_2D.json")
+# simnames <- c("TWIST_2D.json")
 
 for(simname in simnames) {
   for(method in c("ML")) {

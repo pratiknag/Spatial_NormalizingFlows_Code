@@ -1,10 +1,7 @@
 # !/usr/bin/env Rscript
 
 rm(list = ls())
-# args = commandArgs(trailingOnly=TRUE)
-# file_path = args[1]
-# setwd(file_path)
-# setwd("/home/praktik/Desktop/Spatial_norm_flows/")
+
 cat("===========================================================\n")
 cat("                 Generating plots. \n")
 cat("===========================================================\n")
@@ -22,8 +19,8 @@ source("r_scripts/GKriging_functions.R")
 l_s <- 10
 l_t <- 10
 a_s <- 13
-plot_saving_width <- 1.4
-plot_saving_height <- 1.6
+plot_saving_width <- 1.2
+plot_saving_height <- 1.4
 base_size <- 1
 bar_width <- 4
 bar_height <- 0.5
@@ -471,6 +468,94 @@ ggsave("results_AWU_RBF_LFT_2D/plots/se_orig_process.pdf",
        plot = p1, width = plot_saving_width,
        height = plot_saving_height, units = "in")
 
+## DeepKriging plots
+
+### plotting warped spatial process 
+
+pred <- read.csv("raw_datasets/AWU_RBF_LFT_2D_pred_DeepKriging.csv")
+
+pred_mean <- pred$prediction
+pred_var <- pred$se
+
+
+
+plot_data <- data.frame(x = c(pred$s1), 
+                        y = c(pred$s2), 
+                        Observations = c(pred_mean))
+obs_range <- range(plot_data$Observations, na.rm = TRUE)
+min_point <- floor(obs_range[1])
+  interval <- (obs_range[2] - obs_range[1])/3
+  breaks_manual <- round(c(min_point,
+                    min_point + interval,
+                    min_point + 2*interval,
+                    min_point + 3*interval), digits = 0)
+p1 <- ggplot(data = plot_data, 
+       aes(x = x, 
+           y = y)) +
+  geom_raster(data = subset(plot_data, !is.na(Observations)), 
+              aes(fill=Observations)) +
+  scale_fill_viridis(option = "A", 
+                     guide = guide_colorbar(barwidth = bar_width, 
+                                            barheight = bar_height,
+                                            title.vjust = 1.0,
+                                            direction = "horizontal" ,
+                                            label.theme = element_text(margin = margin(t = lg_spacing)) ),
+                     breaks = breaks_manual) +
+  labs( 
+       fill = "Pred.") +
+  theme_bw(base_size = base_size) + 
+  scale_x_continuous(expand = c(0, 0)) +
+scale_y_continuous(expand = c(0, 0)) +
+  theme(
+       legend.text=element_text(size=rel(l_t), hjust = 1), 
+        legend.title = element_text(size=l_s),
+        legend.spacing.y = unit(lg_spacing, "cm"),
+        legend.margin = margin(l = lg_margin, r = lg_margin, t = lg_margin, b = lg_margin),
+        axis.title=element_blank(), 
+        axis.text=element_blank(),
+       legend.position = "bottom")
+ggsave("results_AWU_RBF_LFT_2D/plots/pred_DeepKriging_process.pdf", 
+       plot = p1, width = plot_saving_width ,
+       height = plot_saving_height, units = "in")
+
+plot_data <- data.frame(x = c(pred$s1), 
+                        y = c(pred$s2), 
+                        Observations = sqrt(pred_var))
+obs_range <- range(plot_data$Observations, na.rm = TRUE)
+min_point <- obs_range[1]
+  interval <- (obs_range[2] - obs_range[1])/3
+  breaks_manual <- round(c(min_point + interval,
+                    min_point + 2*interval,
+                    min_point + 3*interval), digits = 1)
+p1 <- ggplot(data = plot_data, 
+       aes(x = x, 
+           y = y)) +
+  geom_raster(data = subset(plot_data, !is.na(Observations)), 
+              aes(fill=Observations)) +
+  scale_fill_viridis(option = "G", limits=c(min_point, breaks_manual[4]),
+                     guide = guide_colorbar(barwidth = bar_width, 
+                                            barheight = bar_height,
+                                            title.vjust = 1.0,
+                                            direction = "horizontal" ,
+                                            label.theme = element_text(margin = margin(t = lg_spacing)) ),
+                     breaks = breaks_manual) +
+  labs( 
+       fill = "se.") +
+  theme_bw(base_size = base_size) + 
+  scale_x_continuous(expand = c(0, 0)) +
+scale_y_continuous(expand = c(0, 0)) +
+  theme(
+       legend.text=element_text(size=rel(l_t)), 
+        legend.title = element_text(size=l_s),
+        legend.spacing.y = unit(lg_spacing, "cm"),
+        legend.margin = margin(l = lg_margin, r = lg_margin, t = lg_margin, b = lg_margin),
+        axis.title=element_blank(), 
+        axis.text=element_blank(),
+       legend.position = "bottom")
+ggsave("results_AWU_RBF_LFT_2D/plots/se_DeepKriging_process.pdf", 
+       plot = p1, width = plot_saving_width,
+       height = plot_saving_height, units = "in")
+
 plot_saving_width <- 2.5
 plot_saving_height <- 2
 base_size <- 1
@@ -515,6 +600,9 @@ scale_y_continuous(expand = c(0, 0)) +
 ggsave("results_AWU_RBF_LFT_2D/plots/AWU_process.pdf", 
        plot = p1, width = plot_saving_width ,
        height = plot_saving_height, units = "in")
+
+
+
 
 # ===========================================================
 #                  Diagnostic for GP deepspat  
@@ -936,8 +1024,8 @@ ggsave("results_AWU_RBF_LFT_2D/plots/AWU_process.pdf",
 ####################################################################
 ###################### TWIST_2D ####################################
 ####################################################################
-plot_saving_width <- 1.4
-plot_saving_height <- 1.6
+plot_saving_width <- 1.2
+plot_saving_height <- 1.4
 base_size <- 1
 bar_width <- 4
 bar_height <- 0.5
@@ -1385,6 +1473,94 @@ ggsave("results_TWIST_2D/plots/se_orig_process.pdf",
        plot = p1, width = plot_saving_width,
        height = plot_saving_height, units = "in")
 
+## DeepKriging plots
+
+
+
+pred <- read.csv("raw_datasets/TWIST_2D_pred_DeepKriging.csv")
+
+pred_mean <- pred$prediction
+pred_var <- pred$se
+
+
+
+plot_data <- data.frame(x = c(pred$s1), 
+                        y = c(pred$s2), 
+                        Observations = c(pred_mean))
+obs_range <- range(plot_data$Observations, na.rm = TRUE)
+min_point <- floor(obs_range[1])
+  interval <- (obs_range[2] - obs_range[1])/3
+  breaks_manual <- round(c(min_point,
+                    min_point + interval,
+                    min_point + 2*interval,
+                    min_point + 3*interval), digits = 0)
+p1 <- ggplot(data = plot_data, 
+       aes(x = x, 
+           y = y)) +
+  geom_raster(data = subset(plot_data, !is.na(Observations)), 
+              aes(fill=Observations)) +
+  scale_fill_viridis(option = "A", 
+                     guide = guide_colorbar(barwidth = bar_width, 
+                                            barheight = bar_height,
+                                            title.vjust = 1.0,
+                                            direction = "horizontal" ,
+                                            label.theme = element_text(margin = margin(t = lg_spacing)) ),
+                     breaks = breaks_manual) +
+  labs( 
+       fill = "Pred.") +
+  theme_bw(base_size = base_size) + 
+  scale_x_continuous(expand = c(0, 0)) +
+scale_y_continuous(expand = c(0, 0)) +
+  theme(
+       legend.text=element_text(size=rel(l_t), hjust = 1), 
+        legend.title = element_text(size=l_s),
+        legend.spacing.y = unit(lg_spacing, "cm"),
+        legend.margin = margin(l = lg_margin, r = lg_margin, t = lg_margin, b = lg_margin),
+        axis.title=element_blank(), 
+        axis.text=element_blank(),
+       legend.position = "bottom")
+ggsave("results_TWIST_2D/plots/pred_DeepKriging_process.pdf", 
+       plot = p1, width = plot_saving_width ,
+       height = plot_saving_height, units = "in")
+
+plot_data <- data.frame(x = c(pred$s1), 
+                        y = c(pred$s2), 
+                        Observations = sqrt(pred_var))
+obs_range <- range(plot_data$Observations, na.rm = TRUE)
+min_point <- obs_range[1]
+  interval <- (obs_range[2] - obs_range[1])/3
+  breaks_manual <- round(c(min_point + interval,
+                    min_point + 2*interval,
+                    min_point + 3*interval), digits = 1)
+p1 <- ggplot(data = plot_data, 
+       aes(x = x, 
+           y = y)) +
+  geom_raster(data = subset(plot_data, !is.na(Observations)), 
+              aes(fill=Observations)) +
+  scale_fill_viridis(option = "G", limits=c(min_point, breaks_manual[4]),
+                     guide = guide_colorbar(barwidth = bar_width, 
+                                            barheight = bar_height,
+                                            title.vjust = 1.0,
+                                            direction = "horizontal" ,
+                                            label.theme = element_text(margin = margin(t = lg_spacing)) ),
+                     breaks = breaks_manual) +
+  labs( 
+       fill = "se.") +
+  theme_bw(base_size = base_size) + 
+  scale_x_continuous(expand = c(0, 0)) +
+scale_y_continuous(expand = c(0, 0)) +
+  theme(
+       legend.text=element_text(size=rel(l_t)), 
+        legend.title = element_text(size=l_s),
+        legend.spacing.y = unit(lg_spacing, "cm"),
+        legend.margin = margin(l = lg_margin, r = lg_margin, t = lg_margin, b = lg_margin),
+        axis.title=element_blank(), 
+        axis.text=element_blank(),
+       legend.position = "bottom")
+ggsave("results_TWIST_2D/plots/se_DeepKriging_process.pdf", 
+       plot = p1, width = plot_saving_width,
+       height = plot_saving_height, units = "in")
+
 plot_saving_width <- 2.5
 plot_saving_height <- 2
 base_size <- 1
@@ -1428,37 +1604,3 @@ scale_y_continuous(expand = c(0, 0)) +
 ggsave("results_TWIST_2D/plots/pred_twist_process.pdf", 
        plot = p1, width = plot_saving_width ,
        height = plot_saving_height, units = "in")
-
-# ===========================================================
-#        Diagnostic for GP deepspat 
-# ===========================================================
-# [1] "mse for predictions is 0.00686474155316794"
-# [1] "picp for pred interval is 0.672189001078326"
-# [1] "avg. width of the pred interval is 0.151115045692465"
-# ===========================================================
-#        Diagnostic for GP nonstationary Mat'ern  
-# ===========================================================
-# [1] "mse for predictions is 0.00358464617943334"
-# [1] "picp for pred interval is 0.829624546613077"
-# [1] "avg. width of the pred interval is 0.112540288940427"
-# ===========================================================
-#        Diagnostic for GP Mat'ern warped locs 
-# ===========================================================
-# [1] "mse for predictions is 0.0018403174560476"
-# [1] "picp for pred interval is 0.949612783060484"
-# [1] "avg. width of the pred interval is 0.131883280260016"
-# ===========================================================
-#        Diagnostic for GP Mat'ern orig locs 
-# ===========================================================
-# [1] "mse for predictions is 0.00386822171577391"
-# [1] "picp for pred interval is 0.985589648073718"
-# [1] "avg. width of the pred interval is 0.381180354544665"
-
-
-
-
-
-
-
-
-
