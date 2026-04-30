@@ -1,5 +1,5 @@
 # Spatial Normalizing Flows
-This repository contains the code and workflows used in our paper titled "**Modeling nonstationary spatial processes with normalizing flows**", which combines the Normalizing flows with Gaussian processes to model flexible spatial processes.
+This repository contains the code and workflows used in our paper titled "**Normalizing flows for flexible spatial process modeling**", which combines the Normalizing flows with Gaussian processes to model flexible spatial processes.
 
 ---
 
@@ -52,7 +52,7 @@ bash run_argo.sh
 ```
 
 ---
-<!--
+
 ## 📫 Contact
 
 For questions, feel free to reach out:
@@ -60,4 +60,3 @@ For questions, feel free to reach out:
 📧 **[pnag@uow.edu.au](mailto:pnag@uow.edu.au)**
 
 ---
--->
