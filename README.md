@@ -45,7 +45,9 @@ bash run_simulations.sh
 
 ### 🌐 Real-World Data Applications
 
-To reproduce the real data scenarios run the following script 
+The `data_scraping_test.ipynb` file is a Jupyter notebook that interactively preprocesses the required PODAAC data products for inference. Please download the data and run all notebook cells in advance so that the necessary files are generated before executing the script below.
+
+To reproduce the Argo data results, run the following script. The resulting outputs will be saved in the `plots/` folder within the corresponding directory.
 
 ```bash
 bash run_argo.sh
