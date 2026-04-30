@@ -253,7 +253,7 @@ class model(object):
             D = load_maf_data(path,path1)
         elif args.dataset == 'argo3D':
             p = 3
-            df = transform_Data('raw_datasets/argo3D.csv')
+            df = transform_Data('raw_datasets/argo3D_resi.csv')
             np.save("raw_datasets/argo3D.npy", df)
             path='argo3D.npy'
             if args.test_dataset_argo3D == "sinloc":
@@ -364,10 +364,10 @@ class model(object):
 #                 (self.checkpoint['e']+1, epoch, LOSSES1/float(counter1), 
 #                  loss_val,
 #                  loss_tst))
-                if loss_tst < self.checkpoint['best_val']:
+                if loss_val < self.checkpoint['best_val']:
                     print(' [^] Best validation loss [^] ... [saving]')
                     self.save(self.save_dir+'/'+self.filename+'_best')
-                    self.checkpoint['best_val'] = loss_tst
+                    self.checkpoint['best_val'] = loss_val
                     self.checkpoint['best_val_epoch'] = self.checkpoint['e']+1
                     
                 LOSSES = 0
@@ -512,7 +512,7 @@ def parse_args():
                                  'sinpress'])
     parser.add_argument('--epoch', type=int, default=500, 
                         help='The number of epochs to run')
-    parser.add_argument('--batch_size', type=int, default= 5000, 
+    parser.add_argument('--batch_size', type=int, default= 6000, 
                         help='The size of batch')
     parser.add_argument('--save_dir', type=str, default='models',
                         help='Directory name to save the model')
